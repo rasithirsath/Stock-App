@@ -5,12 +5,13 @@ export interface Stock {
   changePercent: number;
   volume: string;
 }
+
 export interface HistoryPoint {
   date: string;
   price: number;
 }
 
-const BASE_URL = "http://127.0.0.1:8000/api/stocks";
+const BASE_URL = "https://stock-app-backend-fcw0.onrender.com/api/stocks";
 
 export async function fetchTopStocks(): Promise<Stock[]> {
   const res = await fetch(`${BASE_URL}/top10`);
@@ -21,7 +22,7 @@ export async function fetchTopStocks(): Promise<Stock[]> {
 export async function fetchStockHistory(
   ticker: string,
 ): Promise<HistoryPoint[]> {
-  const res = await fetch(`http://127.0.0.1:8000/api/stocks/${ticker}/history`);
+  const res = await fetch(`${BASE_URL}/${ticker}/history`);
   if (!res.ok) throw new Error("Failed to fetch history");
 
   const prices: number[] = await res.json();
@@ -41,12 +42,9 @@ export async function fetchStockHistory(
 export async function analyzeStock(
   ticker: string,
 ): Promise<{ analysis: string }> {
-  const res = await fetch(
-    `http://127.0.0.1:8000/api/stocks/${ticker}/analyze`,
-    {
-      method: "POST",
-    },
-  );
+  const res = await fetch(`${BASE_URL}/${ticker}/analyze`, {
+    method: "POST",
+  });
   if (!res.ok) throw new Error("AI analysis failed");
   return res.json();
 }
